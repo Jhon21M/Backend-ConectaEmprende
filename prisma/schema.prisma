@@ -9,3 +9,99 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id Int   @id @default(autoincrement())
+  email     String   @unique
+  nombre_user      String
+  password  String
+  nombre   String
+  apellidos   String
+  cedula   String
+  ubicacion   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  biblioteca Biblioteca[]
+  calendario Calendario[]
+  edicion_contenido edicion_contenido[]
+  miembros miembros[]
+  comentarios comentarios[]
+}
+
+model Biblioteca {
+  id Int   @id @default(autoincrement())
+  nombre_recurso     String   
+  descripcion      String
+  categoria  String
+  fecha      DateTime
+  ruta_archivo   String
+  user User @relation(fields: [id_user], references: [id])
+  id_user Int
+  calendario Calendario[]
+  edicion_contenido edicion_contenido[]
+}
+
+model Calendario {
+  id Int   @id @default(autoincrement())
+  nombre_evento     String   
+  descripcion      String
+  fecha_inicio  DateTime
+  user User @relation(fields: [id_user], references: [id])
+  id_user Int
+  biblioteca Biblioteca @relation(fields: [id_biblioteca], references: [id])
+  id_biblioteca Int
+}
+
+model edicion_contenido {
+  id Int   @id @default(autoincrement())
+  fecha_edicion     DateTime
+  user User @relation(fields: [id_user], references: [id])
+  id_user Int
+  biblioteca Biblioteca @relation(fields: [id_biblioteca], references: [id])
+  id_biblioteca Int
+}
+
+model foros {
+  id Int @id @default(autoincrement())
+  titulo String
+  descripcion String
+  categoria String
+  miebros miembros[]
+  comentarios comentarios[]
+}
+
+model miembros{
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [id_user], references: [id])
+  id_user Int
+  foros foros @relation(fields: [id_foro], references: [id])
+  id_foro Int
+}
+
+model comentarios {
+  id Int @id @default(autoincrement())
+  comentario String
+  fecha DateTime
+  user User @relation(fields: [id_user], references: [id])
+  id_user Int
+  foros foros @relation(fields: [id_foro], references: [id])
+  id_foro Int
+}
+
+model calaboradores{
+  id Int @id @default(autoincrement())
+  nombre String
+  descripcion String
+  recursos_educativos recurso_educativo[]
+}
+
+model recurso_educativo{
+  id Int @id @default(autoincrement())
+  titulo String
+  descripcion String
+  categoria String
+  ruta_archivo String
+  fecha DateTime
+  calaboradores calaboradores@relation(fields: [id_calaboradores], references: [id])
+  id_calaboradores Int
+}
