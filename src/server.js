@@ -2,8 +2,9 @@
 aqui se establecen las configuraciones del servidor*/
 
 //se importan los modulos necesarios
-import server from 'express';
-import morgan from 'morgan';
+
+const server = require('express');
+const morgan = require('morgan');
 const app = server();
 
 
@@ -22,9 +23,9 @@ app.use(morgan('dev'));
 
 
 //routes, aqui se establecen las rutas del servidor
-//app.use(require('./routes/tarea.routes'));
+app.use(require('./routes/usuario.routes'));
 
-
+ 
 app.listen(app.get('port'), () => {
     console.log(`Server on port ${app.get('port')}`);
 });
