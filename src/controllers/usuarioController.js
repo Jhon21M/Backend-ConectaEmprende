@@ -5,32 +5,42 @@ const usuarioctrl = {};
 
 
 
-usuarioctrl.getUsuarios = async (req, res) => {
+
+export const getUsuarioP = async (req, res) => {
     const users = await prisma.user.findMany();
     console.log("Hola");
     res.status(200).json(users);
 };
 
-usuarioctrl.createUsuario = async (req, res) => {
+export const createUsuario = async (req, res) => {
     const {nombre, apellidos, cedula, nombre_user, email, password, ubicacion} = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10)
     const fecha_registro = new Date();
-    const newUser = await prisma.user.create({
-        data: {
-            nombre,
-            apellidos,
-            cedula,
-            nombre_user,
-            email,
-            password,
-            ubicacion,
-            createdAt: fecha_registro,
-            updatedAt: fecha_registro
-        }
-    });
-    res.status(200).json(newUser);}
+    try {
+        const newUser = await prisma.user.create({
+            data: {
+                nombre,
+                apellidos,
+                cedula,
+                nombre_user,
+                email,
+                hashedPassword,
+                ubicacion,
+                createdAt: fecha_registro,
+                updatedAt: fecha_registro
+            }
+        });
+        res.status(200).json(newUser);
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+    
+}
 
 
-usuarioctrl.getusuario = async (req, res) => {
+export const getusuario = async (req, res) => {
     const usuario = await prisma.user.findUnique({
         where: {
             id: parseInt(req.params.id)
@@ -38,7 +48,7 @@ usuarioctrl.getusuario = async (req, res) => {
     res.status(200).json(usuario);
 }
 
-usuarioctrl.updateUsuario = async (req, res) => {
+export const updateUsuario = async (req, res) => {
     const {nombre, apellidos, cedula, nombre_user, email, password, ubicacion} = req.body;
     const updatedAt = new Date();
     const usuario = await prisma.user.update({
@@ -58,7 +68,7 @@ usuarioctrl.updateUsuario = async (req, res) => {
 
         res.status(200).json(usuario);}
 
-usuarioctrl.deleteUsuario = async (req, res) => {
+export const deleteUsuario = async (req, res) => {
     const usuario = await prisma.user.delete({
         where: {
             id: parseInt(req.params.id)
@@ -66,4 +76,4 @@ usuarioctrl.deleteUsuario = async (req, res) => {
     res.status(200).json(usuario);
 }
 
-module.exports = usuarioctrl;
+//module.exports = usuarioctrl;
