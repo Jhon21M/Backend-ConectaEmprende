@@ -35,7 +35,15 @@ export const signup = async (req, res) => {
                 updatedAt: fecha_registro,
             },
         });
-        return signToken(newUser.id, newUser.email);
+          
+
+        return res.json({
+            Access_token: await signToken(newUser.id, newUser.email)
+        });
+        
+ 
+            
+      
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === "P2002") {
@@ -49,23 +57,29 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await this.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
             email: email,
         },
     });
+    console.log(user)
 
     // si no existe retorna un error
     if (!user) return res.status(404).json({message: "Email is incorrect or doesn't exist"});
-
+    console.log("hola2")
     //comparar las contraseñas
-    const pwMatches = await argon.verify(user.hash, dto.password);
-
+    console.log(user.hash)
+    const pwMatches = await argon.verify(user.password, password);
+    console.log("hola3")
     // si no son iguales, retorna un error
     if (!pwMatches) return res.status(404).json({message: "Incorrect password"});
 
+
     //devuelver un toquen al user
-    return this.signToken(user.id, user.email);
+    return res.json({
+        Access_token: await signToken(user.id, user.email)
+    });
+    
 };
 
 export const signToken = async (userId, email) => {
@@ -78,10 +92,11 @@ export const signToken = async (userId, email) => {
     const config = {
         expiresIn: "15m",
     };
-
+   
     const token = await jwt.sign(payload, Secret, config);
 
-    return {
-        access_token: token,
-    };
+
+
+    return token;
+
 };
