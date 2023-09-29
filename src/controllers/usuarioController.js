@@ -13,7 +13,7 @@ export const getUsuarioP = async (req, res) => {
 };
 
 export const createUsuario = async (req, res) => {
-    const {nombre, apellidos, cedula, nombre_user, email, password, ubicacion} = req.body;
+    const { nombre, apellidos, cedula, nombre_user, email, password, ubicacion } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10)
     const fecha_registro = new Date();
     try {
@@ -36,7 +36,7 @@ export const createUsuario = async (req, res) => {
             error: error.message
         })
     }
-    
+
 }
 
 
@@ -44,12 +44,13 @@ export const getusuario = async (req, res) => {
     const usuario = await prisma.user.findUnique({
         where: {
             id: parseInt(req.params.id)
-        }});
+        }
+    });
     res.status(200).json(usuario);
 }
 
 export const updateUsuario = async (req, res) => {
-    const {nombre, apellidos, cedula, nombre_user, email, password, ubicacion} = req.body;
+    const { nombre, apellidos, cedula, nombre_user, email, password, ubicacion } = req.body;
     const updatedAt = new Date();
     const usuario = await prisma.user.update({
         where: {
@@ -62,17 +63,20 @@ export const updateUsuario = async (req, res) => {
             nombre_user,
             email,
             password,
-            ubicacion,  
-            updatedAt
-        }});
+            ubicacion,
+            updatedAt: updatedAt
+        }
+    });
 
-        res.status(200).json(usuario);}
+    res.status(200).json(usuario);
+}
 
 export const deleteUsuario = async (req, res) => {
     const usuario = await prisma.user.delete({
         where: {
             id: parseInt(req.params.id)
-        }});
+        }
+    });
     res.status(200).json(usuario);
 }
 

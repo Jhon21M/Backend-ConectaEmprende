@@ -47,11 +47,13 @@ export const signup = async (req, res) => {
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === "P2002") {
-                throw new error("Email already in use");
+                return res.json({message: "Email already in use"})
             }
         }
-        throw error;
-        console.log(error);
+        return res.json({
+            message: error.message
+        })
+
     }
 };
 export const signin = async (req, res) => {
@@ -75,7 +77,7 @@ export const signin = async (req, res) => {
     if (!pwMatches) return res.status(404).json({message: "Incorrect password"});
 
 
-    //devuelver un toquen al user
+    //devuelve un toquen al user
     return res.json({
         Access_token: await signToken(user.id, user.email)
     });
@@ -90,13 +92,11 @@ export const signToken = async (userId, email) => {
     const Secret = process.env.JWT_SECRET;
 
     const config = {
-        expiresIn: "15m",
+        expiresIn: "20s",
     };
    
     const token = await jwt.sign(payload, Secret, config);
 
 
-
     return token;
-
 };

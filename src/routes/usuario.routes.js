@@ -5,19 +5,19 @@ const {Router} = require('express');
 const router = Router();
 
 //end point para obtener todos los usuarios
-router.get('/usuarios', verifyToken, userCntrl.getUsuarioP )
+router.get('/', verifyToken, userCntrl.getUsuarioP )
 
 //end point para guardar un usuario
 router.post('/usuario', userCntrl.createUsuario )
 
 //end point para obtener un usuario por id
-router.get('/usuario/:id', verifyToken, userCntrl.getusuario )
+router.get('/:id', verifyToken, userCntrl.getusuario )
 
 //end point para actualizar un usuario
-router.put('/usuario/:id', verifyToken, userCntrl.updateUsuario )
+router.put('/:id', verifyToken, userCntrl.updateUsuario )
 
 //end point para eliminar un usuario
-router.delete('/usuario/:id', verifyToken, userCntrl.deleteUsuario )
+router.delete('/:id', verifyToken, userCntrl.deleteUsuario )
 
 
 module.exports = router;
