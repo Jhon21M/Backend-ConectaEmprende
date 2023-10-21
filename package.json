@@ -4,10 +4,10 @@
   "description": "Api for the aplication ConectaEmprende",
   "main": "index.js",
   "scripts": {
-    "build": "babel src --out-dir build",
+    "build2": "babel src --out-dir build",
     "dev": "nodemon src/server.js --exec babel-node",
     "start": "node build/server.js",
-    "deploy": "npm install && npx prisma generate"
+    "build": "npm install && npx prisma generate && npm run build2 && npm run start"
   },
   "author": "elton cruz",
   "license": "ISC",
