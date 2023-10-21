@@ -10,7 +10,6 @@ export const verifyToken = async (req, res, next) => {
     console.log(token);
     // si esta vacio retornamos un error
     if (!token) return res.status(403).json({ message: "No token provided" });
-    console.log("hola 1")
 
     try {
         // si existe lo verificamos, y para ello uilizamos la variable secret, si conincide...
@@ -25,9 +24,9 @@ export const verifyToken = async (req, res, next) => {
                 id: id,
             }
         })
-          
 
         if (!user) return res.status(404).json({ message: "Unauthorizad" });
+        req.user = user
         next();
     } catch (error) {
         return res.status(404).json({ error: error.message });

@@ -1,10 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const usuarioctrl = {};
-
-
-
 
 export const getUsuarioP = async (req, res) => {
     const users = await prisma.user.findMany();

@@ -25,7 +25,10 @@ model User {
   calendario        Calendario[]
   edicion_contenido edicion_contenido[]
   miembros          miembros[]
-  comentarios       comentarios[]
+  comentarios       comentario_foro[]
+  Intereses         Intereses[]
+  foro_comentario   mensaje_foro[]
+  likes_foro        likes_foro[]
 }
 
 model Biblioteca {
@@ -62,12 +65,22 @@ model edicion_contenido {
 }
 
 model foros {
-  id          Int           @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   titulo      String
   descripcion String
   categoria   String
-  miebros     miembros[]
-  comentarios comentarios[]
+  like        Int
+  miembros    miembros[]
+  comentarios mensaje_foro[]
+  likes_foro  likes_foro[]
+}
+
+model comentario_foro {
+  id         Int      @id @default(autoincrement())
+  comentario String
+  createAt   DateTime @default(now())
+  id_user    Int
+  user       User     @relation(fields: [id_user], references: [id])
 }
 
 model miembros {
@@ -78,17 +91,26 @@ model miembros {
   id_foro Int
 }
 
-model comentarios {
+model mensaje_foro {
   id         Int      @id @default(autoincrement())
   comentario String
-  fecha      DateTime
+  createdAt  DateTime @default(now())
   user       User     @relation(fields: [id_user], references: [id])
   id_user    Int
   foros      foros    @relation(fields: [id_foro], references: [id])
   id_foro    Int
 }
 
-model calaboradores {
+model likes_foro {
+  id      Int   @id @default(autoincrement())
+  like    Int
+  id_user Int
+  id_foro Int
+  foros   foros @relation(fields: [id_foro], references: [id])
+  users User @relation(fields: [id_user], references: [id])
+}
+
+model colaboradores {
   id                  Int                 @id @default(autoincrement())
   nombre              String
   descripcion         String
@@ -101,7 +123,16 @@ model recurso_educativo {
   descripcion      String
   categoria        String
   ruta_archivo     String
-  fecha            DateTime
-  calaboradores    calaboradores @relation(fields: [id_calaboradores], references: [id])
-  id_calaboradores Int
+  fecha            DateTime      @default(now())
+  colaboradores    colaboradores @relation(fields: [id_colaboradores], references: [id])
+  id_colaboradores Int
+  Intereses        Intereses[]
+}
+
+model Intereses {
+  id                   Int               @id @default(autoincrement())
+  id_user              Int
+  id_recurso_educativo Int               @map("id_recurso")
+  user                 User              @relation(fields: [id_user], references: [id])
+  foros                recurso_educativo @relation(fields: [id_recurso_educativo], references: [id])
 }
