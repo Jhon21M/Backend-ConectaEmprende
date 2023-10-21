@@ -6,8 +6,8 @@
   "scripts": {
     "build2": "babel src --out-dir build",
     "dev": "nodemon src/server.js --exec babel-node",
-    "start": "npm run build",
-    "build": "npx prisma generate && npm run build2 && node build/server.js"
+    "start": "node build/server.js",
+    "build": "npx prisma generate && npm run build2 && npm start"
   },
   "author": "elton cruz",
   "license": "ISC",
